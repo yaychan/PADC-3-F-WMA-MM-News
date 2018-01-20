@@ -12,23 +12,21 @@
 
     <Button
         android:id="@+id/btn_to_register"
+        style="@style/accent_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@color/accent"
-        android:text="@string/register_btn"
-        android:textSize="24sp" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/margin_medium_2"
+        android:text="@string/lbl_register" />
 
     <Button
         android:id="@+id/btn_to_login"
+        style="@style/accent_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="120dp"
-        android:background="@color/accent"
-        android:text="@string/login_btn"
-        android:textSize="24sp" />
-
+        android:layout_above="@id/btn_to_register"
+        android:layout_alignRight="@id/btn_to_register"
+        android:text="@string/lbl_login" />
 
 </xyz.winmyataung.news.viewpod.BeforeLoginViewPod>
