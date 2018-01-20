@@ -8,4 +8,7 @@
 
     <string name="menu_item_all_news">All News</string>
     <string name="menu_item_news_by_category">News By Category</string>
+
+    <string name="login_btn">Login ၀င္ရန္</string>
+    <string name="register_btn">Register ျပုလုပ္ရန္</string>
 </resources>
