@@ -2,8 +2,12 @@ package xyz.winmyataung.news.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +28,7 @@ import xyz.winmyataung.news.MMNewsApp;
 import xyz.winmyataung.news.R;
 import xyz.winmyataung.news.adapters.NewsAdapter;
 import xyz.winmyataung.news.data.model.NewsModel;
+import xyz.winmyataung.news.data.vo.NewsVO;
 import xyz.winmyataung.news.delegates.NewsActionDelegates;
 import xyz.winmyataung.news.events.LoadedNewsEvent;
 
@@ -38,6 +43,12 @@ public class MainActivity extends AppCompatActivity implements NewsActionDelegat
     @BindView(R.id.fab)
     FloatingActionButton floatingActionButton;
 
+    @BindView(R.id.navigation_view)
+    NavigationView navigationView;
+
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+
     private NewsAdapter mNewsAdapter;
 
     @Override
@@ -46,11 +57,39 @@ public class MainActivity extends AppCompatActivity implements NewsActionDelegat
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this, this);
 
+        setSupportActionBar(toolbar);
+
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setTitle(R.string.menu_item_all_news);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         mNewsAdapter = new NewsAdapter(this);
 
-        LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         rvNews.setLayoutManager(linearLayoutManager);
         rvNews.setAdapter(mNewsAdapter);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                if(item.getItemId() == R.id.menu_news_by_category){
+
+                    /**
+                     * launch newsByCategory
+                     */
+                    Intent intent = NewsByCategoryActivity.newIntent(getApplicationContext());
+                    startActivity(intent);
+
+                    /**
+                     * close left menu after back button is pressed.
+                     */
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                }
+                return false;
+            }
+        });
 
         NewsModel.getObjInstance().loadNews();             //call method from singleton pattern model
     }
@@ -84,6 +123,8 @@ public class MainActivity extends AppCompatActivity implements NewsActionDelegat
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if(id == android.R.id.home){
+            drawerLayout.openDrawer(GravityCompat.START);
         }
 
         return super.onOptionsItemSelected(item);
@@ -96,8 +137,12 @@ public class MainActivity extends AppCompatActivity implements NewsActionDelegat
     }
 
     @Override
-    public void onTapNewsItem() {
-        Intent intent = new Intent(getApplicationContext(),NewsDetailsActivity.class); //paramenter = context object , communicate loat chin tae activity yae class type.
+    public void onTapNewsItem(NewsVO tappedNews) {
+        Intent intent = new Intent(getApplicationContext(), NewsDetailsActivity.class); //paramenter = context object , communicate loat chin tae activity yae class type.
+        /**
+         * pass to details screen for tapped news. pass with key value pair
+         */
+        intent.putExtra("news_id", tappedNews.getNewsId());
         startActivity(intent);
     }
 
@@ -118,11 +163,12 @@ public class MainActivity extends AppCompatActivity implements NewsActionDelegat
 
     /**
      * created event object as param
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewsLoaded(LoadedNewsEvent event){
-        Log.d(MMNewsApp.LOG_TAG,"onNewsLoaded : "+event.getNewsList());
+    public void onNewsLoaded(LoadedNewsEvent event) {
+        Log.d(MMNewsApp.LOG_TAG, "onNewsLoaded : " + event.getNewsList());
         mNewsAdapter.setNews(event.getNewsList());
 
 

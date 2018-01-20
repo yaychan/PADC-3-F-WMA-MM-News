@@ -10,7 +10,7 @@ import xyz.winmyataung.news.data.vo.NewsVO;
 
 public class GetNewsResponses {
     private int code;
-    private String mesage;
+    private String message;
     private String apiVersion;
     private String page;
     private List<NewsVO> mmNews;
@@ -20,7 +20,7 @@ public class GetNewsResponses {
     }
 
     public String getMesage() {
-        return mesage;
+        return message;
     }
 
     public String getApiVersion() {

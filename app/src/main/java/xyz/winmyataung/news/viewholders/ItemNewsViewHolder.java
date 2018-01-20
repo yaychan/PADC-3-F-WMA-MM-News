@@ -21,6 +21,11 @@ import xyz.winmyataung.news.delegates.NewsActionDelegates;
 
 public class ItemNewsViewHolder extends RecyclerView.ViewHolder {
 
+    /**
+     * viewholder mhar pya pay mae data ko attribute ta khu htal mhar thane mal.
+     */
+    private NewsVO mNews;
+
     @BindView(R.id.tv_publication_title)
     TextView tvPublicationTitle;
 
@@ -48,11 +53,15 @@ public class ItemNewsViewHolder extends RecyclerView.ViewHolder {
     }
     @OnClick(R.id.cv_news_item)                  //user tap loat mae component yae id
     public void onNewsItemTap(View view){         // View obj as parameter
+
       /*  Toast.makeText(view.getContext(), "News item clicked",Toast.LENGTH_LONG).show();*/
-      mNewsActionDelegates.onTapNewsItem();
+
+      mNewsActionDelegates.onTapNewsItem(mNews);  //mNews ko pass.
     }
 
     public void setNews(NewsVO news){
+        mNews = news;      // data ko mNews htal mhar a yin thane htar .
+
         tvPublicationTitle.setText(news.getPublication().getTitle());
         tvPostedDate.setText(news.getPostedDate());
         tvNewsBrief.setText(news.getBrief());
